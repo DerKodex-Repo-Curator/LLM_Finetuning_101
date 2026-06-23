@@ -13,6 +13,7 @@ import torch
 from datasets import Dataset
 from transformers import TextStreamer
 from trl import SFTConfig, SFTTrainer
+from rich import print
 
 MODEL_NAME = "unsloth/Llama-3.2-1B-Instruct" if torch.backends.mps.is_available() else "unsloth/Llama-3.2-1B-Instruct-bnb-4bit"
 OUTPUT_DIR = "outputs"
@@ -121,7 +122,7 @@ def train(model, tokenizer, dataset: Dataset):
         max_steps=30,
         learning_rate=2e-4,
         logging_steps=1,
-        optim="adamw_8bit" if not torch.backends.mps.is_available() else "adamw_torch",
+        optim="adamw_torch" if torch.backends.mps.is_available() else "adamw_8bit",
         weight_decay=0.01,
         lr_scheduler_type="linear",
         seed=3407,
